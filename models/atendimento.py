@@ -6,7 +6,6 @@ from models.pagamento import Pagamento
 class TipoAtendimento:
     def __init__(self, nome: str):
         self.__nome = nome
-        
     @property
     def nome(self): return self.__nome
 
@@ -15,7 +14,6 @@ class Procedimento:
         self.__descricao = descricao
         self.__custo = custo
         self.__profissional_responsavel = profissional_responsavel
-
     @property
     def custo(self): return self.__custo
     @property
@@ -32,17 +30,34 @@ class Atendimento:
         self.__profissional = profissional
         self.__clinica = clinica
         self.__tipo = tipo
-        
-        # Composição
         self.__procedimentos = []
         self.__pagamentos = []
 
     @property
     def data_atend(self): return self.__data_atend
+    @data_atend.setter
+    def data_atend(self, data): self.__data_atend = data
+
     @property
     def horario_inicio(self): return self.__horario_inicio
+    @horario_inicio.setter
+    def horario_inicio(self, hora): self.__horario_inicio = hora
+
+    @property
+    def horario_fim(self): return self.__horario_fim
+    @horario_fim.setter
+    def horario_fim(self, hora): self.__horario_fim = hora
+
+    @property
+    def valor_base(self): return self.__valor_base
+    @valor_base.setter
+    def valor_base(self, valor): self.__valor_base = valor
+
     @property
     def paciente(self): return self.__paciente
+    @paciente.setter
+    def paciente(self, pac): self.__paciente = pac
+
     @property
     def clinica(self): return self.__clinica
     @property

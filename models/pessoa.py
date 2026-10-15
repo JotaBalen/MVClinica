@@ -10,10 +10,16 @@ class Pessoa(ABC):
 
     @property
     def nome(self): return self.__nome
+    @nome.setter
+    def nome(self, nome): self.__nome = nome
+
     @property
     def cpf(self): return self.__cpf
+    
     @property
     def celular(self): return self.__celular
+    @celular.setter
+    def celular(self, celular): self.__celular = celular
 
 class Paciente(Pessoa):
     def __init__(self, nome: str, celular: str, cpf: str, data_nascimento: date):
@@ -22,6 +28,8 @@ class Paciente(Pessoa):
 
     @property
     def data_nascimento(self): return self.__data_nascimento
+    @data_nascimento.setter
+    def data_nascimento(self, data): self.__data_nascimento = data
 
     def calcular_idade(self) -> int:
         hoje = date.today()
