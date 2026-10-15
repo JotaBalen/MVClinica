@@ -61,22 +61,19 @@ class ControladorPaciente:
             self.__tela_paciente.mostrar_mensagem("Paciente não encontrado.")
             return
             
-        self.__tela_paciente.mostrar_mensagem(f"Modificando dados de: {paciente.nome} (Aviso: O CPF não pode ser alterado)")
+        self.__tela_paciente.mostrar_mensagem(f"Modificando dados de: {paciente.nome} (CPF: {paciente.cpf})")
         
         try:
-            dados = self.__tela_paciente.pegar_dados_paciente()
-            
-            # Validação 2: Se o usuário tentar digitar um CPF diferente do original, cancela a alteração
-            if dados["cpf"] != paciente.cpf:
-                raise CpfInalteravelException()
+            # Chama a nova função da View que NÃO pede o CPF
+            dados = self.__tela_paciente.pegar_dados_alteracao()
 
+            # O CPF continua intacto. Alteramos apenas os dados mutáveis.
             paciente.nome = dados["nome"]
             paciente.celular = dados["celular"]
             paciente.data_nascimento = date(dados["ano"], dados["mes"], dados["dia"])
+            
             self.__tela_paciente.mostrar_mensagem("Paciente alterado com sucesso.")
             
-        except CpfInalteravelException as e:
-            self.__tela_paciente.mostrar_mensagem(str(e))
         except ValueError:
             self.__tela_paciente.mostrar_mensagem("Erro: Data de nascimento inválida.")
 

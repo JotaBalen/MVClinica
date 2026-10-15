@@ -8,15 +8,15 @@ class TelaPaciente:
         print("0. Voltar")
         return input("Escolha uma opção: ")
 
-    def pegar_dados_paciente(self):
-        print("\n-- Dados do Paciente --")
+    def pegar_dados_alteracao(self):
+        print("\n-- Novos Dados do Paciente --")
         nome = input("Nome: ")
         celular = input("Celular: ")
-        cpf = input("CPF: ")
         ano = int(input("Ano de nascimento (AAAA): "))
         mes = int(input("Mês de nascimento (MM): "))
         dia = int(input("Dia de nascimento (DD): "))
-        return {"nome": nome, "celular": celular, "cpf": cpf, "ano": ano, "mes": mes, "dia": dia}
+        # Não pedir o CPF, pois ele é a chave de identificação
+        return {"nome": nome, "celular": celular, "ano": ano, "mes": mes, "dia": dia}
 
     def pegar_cpf(self):
         return input("Digite o CPF do paciente: ")
