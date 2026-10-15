@@ -1,6 +1,7 @@
 from datetime import date
 from models.pessoa import Paciente
 from views.tela_paciente import TelaPaciente
+from exceptions.excecoes_clinica import CpfInalteravelException, CpfDuplicadoException
 
 class ControladorPaciente:
     def __init__(self, controlador_principal):
@@ -34,35 +35,48 @@ class ControladorPaciente:
     def incluir(self):
         try:
             dados = self.__tela_paciente.pegar_dados_paciente()
+            
+            # Validação 1: Impede cadastrar dois pacientes com o mesmo CPF
             if self.buscar_paciente_por_cpf(dados["cpf"]):
-                self.__tela_paciente.mostrar_mensagem("Erro: CPF já cadastrado.")
-                return
+                raise CpfDuplicadoException()
                 
             nascimento = date(dados["ano"], dados["mes"], dados["dia"])
             paciente = Paciente(dados["nome"], dados["celular"], dados["cpf"], nascimento)
             self.__pacientes.append(paciente)
             self.__tela_paciente.mostrar_mensagem("Paciente cadastrado com sucesso.")
+            
+        except CpfDuplicadoException as e:
+            self.__tela_paciente.mostrar_mensagem(str(e))
         except ValueError:
-            self.__tela_paciente.mostrar_mensagem("Erro: Data de nascimento inválida.")
+            self.__tela_paciente.mostrar_mensagem("Erro: Data de nascimento inválida. Digite apenas números.")
 
     def listar(self):
         self.__tela_paciente.listar_pacientes(self.__pacientes)
 
     def alterar(self):
-        cpf = self.__tela_paciente.pegar_cpf()
-        paciente = self.buscar_paciente_por_cpf(cpf)
+        cpf_busca = self.__tela_paciente.pegar_cpf()
+        paciente = self.buscar_paciente_por_cpf(cpf_busca)
         
         if not paciente:
             self.__tela_paciente.mostrar_mensagem("Paciente não encontrado.")
             return
             
-        self.__tela_paciente.mostrar_mensagem("Digite os novos dados (Mantenha o CPF igual):")
+        self.__tela_paciente.mostrar_mensagem(f"Modificando dados de: {paciente.nome} (Aviso: O CPF não pode ser alterado)")
+        
         try:
             dados = self.__tela_paciente.pegar_dados_paciente()
+            
+            # Validação 2: Se o usuário tentar digitar um CPF diferente do original, cancela a alteração
+            if dados["cpf"] != paciente.cpf:
+                raise CpfInalteravelException()
+
             paciente.nome = dados["nome"]
             paciente.celular = dados["celular"]
             paciente.data_nascimento = date(dados["ano"], dados["mes"], dados["dia"])
             self.__tela_paciente.mostrar_mensagem("Paciente alterado com sucesso.")
+            
+        except CpfInalteravelException as e:
+            self.__tela_paciente.mostrar_mensagem(str(e))
         except ValueError:
             self.__tela_paciente.mostrar_mensagem("Erro: Data de nascimento inválida.")
 
