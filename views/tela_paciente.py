@@ -27,7 +27,9 @@ class TelaPaciente:
             print("Nenhum paciente cadastrado.")
             return
         for p in pacientes:
-            print(f"Nome: {p.nome} | CPF: {p.cpf} | Idade: {p.calcular_idade()} anos")
+            # Formata a data para melhor visualização (DD/MM/AAAA)
+            nasc = p.data_nascimento.strftime('%d/%m/%Y')
+            print(f"Nome: {p.nome} | CPF: {p.cpf} | Celular: {p.celular} | Nasc: {nasc} (Idade: {p.calcular_idade()} anos)")
 
     def mostrar_mensagem(self, msg: str):
         print(f"\n>>> {msg}")

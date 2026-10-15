@@ -24,13 +24,19 @@ class TelaAtendimento:
             return -1
 
     def listar_atendimentos(self, atendimentos):
-        print("\n--- LISTA DE ATENDIMENTOS ---")
-        if not atendimentos:
-            print("Nenhum atendimento registrado.")
-            return
-        # Mostra um índice (0, 1, 2...) para facilitar a escolha na alteração/exclusão
-        for i, a in enumerate(atendimentos):
-            print(f"[{i}] Data: {a.data_atend.strftime('%d/%m/%Y')} | Paciente: {a.paciente.nome} | Clínica: {a.clinica.nome} | Valor Total: R$ {a.calcular_valor_total():.2f}")
+            print("\n--- LISTA DE ATENDIMENTOS ---")
+            if not atendimentos:
+                print("Nenhum atendimento registrado.")
+                return
+            # Mostra o índice para facilitar a escolha na alteração/exclusão e os novos detalhes
+            for i, a in enumerate(atendimentos):
+                data_formatada = a.data_atend.strftime('%d/%m/%Y')
+                hora_inicio_str = a.horario_inicio.strftime('%H:%M')
+                hora_fim_str = a.horario_fim.strftime('%H:%M')
+                
+                print(f"[{i}] Data: {data_formatada} ({hora_inicio_str} às {hora_fim_str}) | "
+                    f"Paciente: {a.paciente.nome} (CPF: {a.paciente.cpf}) | "
+                    f"Clínica: {a.clinica.nome} | Valor Total: R$ {a.calcular_valor_total():.2f}")
 
     def mostrar_mensagem(self, msg: str):
         print(f"\n>>> {msg}")
