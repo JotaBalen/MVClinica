@@ -1,7 +1,7 @@
 from datetime import date
 from models.pessoa import Paciente
 from views.tela_paciente import TelaPaciente
-from exceptions.excecoes_clinica import CpfInalteravelException, CpfDuplicadoException
+from exceptions.excecoes_clinica import CpfInalteravelException, CpfDuplicadoException, CpfInvalidoException
 
 class ControladorPaciente:
     def __init__(self, controlador_principal):
@@ -36,7 +36,11 @@ class ControladorPaciente:
         try:
             dados = self.__tela_paciente.pegar_dados_paciente()
             
-            # Validação 1: Impede cadastrar dois pacientes com o mesmo CPF
+            # Verifica se o utilizador digitou letras no CPF
+            if not dados["cpf"].isdigit():
+                raise CpfInvalidoException()
+            
+            # Impede cadastrar dois pacientes com o mesmo CPF
             if self.buscar_paciente_por_cpf(dados["cpf"]):
                 raise CpfDuplicadoException()
                 
@@ -45,7 +49,7 @@ class ControladorPaciente:
             self.__pacientes.append(paciente)
             self.__tela_paciente.mostrar_mensagem("Paciente cadastrado com sucesso.")
             
-        except CpfDuplicadoException as e:
+        except (CpfDuplicadoException, CpfInvalidoException) as e:
             self.__tela_paciente.mostrar_mensagem(str(e))
         except ValueError:
             self.__tela_paciente.mostrar_mensagem("Erro: Data de nascimento inválida. Digite apenas números.")
